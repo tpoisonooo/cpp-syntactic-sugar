@@ -47,7 +47,7 @@ private:
         }
         auto x = static_cast<size_t>((m_end - m_begin) / m_step);
         if (x * m_step + m_begin != m_end) {
-            ++x;
+                ++x;
         } 
         return x;
     }
