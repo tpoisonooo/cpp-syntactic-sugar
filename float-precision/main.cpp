@@ -22,7 +22,7 @@ void crop_resize_bgr(size_t w, size_t h) {
     return;
 }
 
-int main() {
+int example1() {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(1.0, 1000.0);
@@ -36,6 +36,13 @@ int main() {
         //fprintf(stdout, "%f %f %f %f\n", crop_rect.left, crop_rect.top, crop_rect.right, crop_rect.bottom);
         fprintf(stdout, "diff %f \n", crop_rect.width() - crop_rect.height());
         crop_resize_bgr(crop_rect.width(), crop_rect.height());
+    }
+    return 0;
+}
+
+int example2() {
+    while(true) {
+         
     }
     return 0;
 }
