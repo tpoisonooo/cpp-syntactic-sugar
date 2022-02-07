@@ -40,9 +40,8 @@ int example1() {
     return 0;
 }
 
-int example2() {
-    while(true) {
-         
-    }
-    return 0;
+
+
+int main() {
+    example1();
 }
