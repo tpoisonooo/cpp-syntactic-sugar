@@ -10,5 +10,7 @@ cpp sugar/salt
 ├── range               // 模拟 `python range` 
 ├── NCHW4               // NC4HW4 layout 卷积
 ├── AOP
+├── UB01-no-return
+├── UB02-bad-inline
 └── README.md
 ```
