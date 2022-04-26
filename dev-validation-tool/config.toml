@@ -1,0 +1,10 @@
+# 相对误差
+rtol = 1e-3
+
+# 绝对误差
+atol = 1e-5
+
+# 需要对比的 list of pair
+data = [ ["deploy_vxal", "ncnn_val"], ["val1", "val2"] ]
+
+
