@@ -5,7 +5,7 @@
 # usage
 ```bash
 $ conda install --file requirements.txt
-$ python3 main.py --confdir config.toml --datadir /tmp/ub
+$ python3 main.py --confdir ubconfig.toml --datadir /tmp/ub
 ```
 
 # 功能
