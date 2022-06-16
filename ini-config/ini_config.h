@@ -66,6 +66,13 @@ template <> std::string value_get<std::string>(std::string text) {
   return text.substr(start + 1, end);
 }
 
+/**
+ * @brief parse `[1, 2.2]` format to value list
+ * 
+ * @tparam T 
+ * @param text 
+ * @return std::vector<T> 
+ */
 template <typename T> std::vector<T> value_get_list(std::string text) {
   std::vector<T> result;
   std::string no_brace;
@@ -106,6 +113,10 @@ template <typename T> std::vector<T> value_get_list(std::string text) {
   return result;
 }
 
+/**
+ * @brief contains multiple `key=value` lines
+ * 
+ */
 class Table {
 public:
   Table() {}
@@ -162,6 +173,10 @@ private:
   std::map<std::string, std::string> values;
 };
 
+/**
+ * @brief `Config` consist of multiple key-table
+ * 
+ */
 class Config {
 public:
   Config() {}
@@ -203,6 +218,8 @@ public:
 
       pTable->feed(line);
     }
+
+    fin.close();
   }
 
   std::vector<std::string> keys() {
@@ -217,13 +234,13 @@ public:
     return tables.size();
   }
 
-  std::shared_ptr<Table> operator[](size_t i) { return std::get<1>(tables[i]); }
+  std::tuple<std::string, std::shared_ptr<Table>> operator[](size_t i) { return tables[i]; }
 
-  void append(const std::string key, std::shared_ptr<Table> table) {
+  void append(const std::string& key, std::shared_ptr<Table> table) {
     tables.emplace_back(std::make_pair(key, table));
   }
 
-  void write(const std::string path) {
+  void write(const std::string& path) {
     std::ofstream fout;
     fout.open(path, std::ios::out);
     if (!fout.is_open()) {

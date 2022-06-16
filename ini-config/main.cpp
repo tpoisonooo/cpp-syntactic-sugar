@@ -62,7 +62,9 @@ void test_read() {
     fprintf(stdout, "name %s|", names[i].c_str());
   }
   fprintf(stdout, "\n");
-  auto ptable = pconf->operator[](0);
+  std::string name;
+  std::shared_ptr<ini::Table> ptable;
+  std::tie(name, ptable) = pconf->operator[](0);
   std::vector<float> weights = ptable->get_list<float>("weight");
   for (auto w : weights) {
     fprintf(stdout, "%f ", w);
