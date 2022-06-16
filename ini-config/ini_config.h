@@ -5,8 +5,9 @@
 #include <sstream>
 #include <string>
 #include <type_traits>
-#include <unordered_map>
+#include <map>
 #include <vector>
+#include <tuple>
 
 // ini format table reader and writer
 // file example:
@@ -158,7 +159,7 @@ public:
   }
 
 private:
-  std::unordered_map<std::string, std::string> values;
+  std::map<std::string, std::string> values;
 };
 
 class Config {
@@ -185,7 +186,6 @@ public:
       if (line.length() <= 2) {
         pTable = nullptr;
         continue;
-        ;
       }
 
       if (nullptr == pTable) {
@@ -197,7 +197,7 @@ public:
         std::string key = line.substr(start + 1, end - start - 1);
 
         pTable = std::make_shared<Table>();
-        tables[key] = pTable;
+        append(key, pTable);
         continue;
       }
 
@@ -205,18 +205,22 @@ public:
     }
   }
 
-  std::vector<std::string> list_all() {
+  std::vector<std::string> keys() {
     std::vector<std::string> result;
-    for (auto itra = tables.begin(); itra != tables.end(); ++itra) {
-      result.push_back(itra->first);
+    for (auto& pair: tables) {
+      result.push_back(std::get<0>(pair));
     }
     return result;
   }
 
-  std::shared_ptr<Table> operator[](std::string key) { return tables[key]; }
+  size_t size() {
+    return tables.size();
+  }
+
+  std::shared_ptr<Table> operator[](size_t i) { return std::get<1>(tables[i]); }
 
   void append(const std::string key, std::shared_ptr<Table> table) {
-    tables[key] = table;
+    tables.emplace_back(std::make_pair(key, table));
   }
 
   void write(const std::string path) {
@@ -226,17 +230,19 @@ public:
       fprintf(stderr, "open %s failed\n", path.c_str());
     }
 
-    for (auto itra = tables.begin(); itra != tables.end(); ++itra) {
-      fout << "[" << itra->first << "]\n";
-      fout << itra->second->stringify();
-      fout << "\n";
+    for (auto& pair: tables) {
+        std::string name = std::get<0>(pair);
+        std::shared_ptr<Table> ptable = std::get<1>(pair);
+        fout << "[" << name << "]\n";
+        fout << ptable->stringify();
+        fout << "\n";
     }
     fout.flush();
     fout.close();
   }
 
 private:
-  std::unordered_map<std::string, std::shared_ptr<Table>> tables;
+  std::vector<std::tuple<std::string, std::shared_ptr<Table>>> tables;
 };
 
 } // namespace ini

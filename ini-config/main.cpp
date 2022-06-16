@@ -41,7 +41,7 @@ void test_write() {
     pconf->append("LayerNorm_68", pt);
   }
 
-  const auto &names = pconf->list_all();
+  const auto &names = pconf->keys();
   // for (size_t i = 0; i < names.size(); i++)
   // {
   //     fprintf(stdout, "name %s|", names[i].c_str());
@@ -57,17 +57,20 @@ void test_read() {
 
   pconf->read("quant.ini");
 
-  const auto &names = pconf->list_all();
+  const auto &names = pconf->keys();
   for (size_t i = 0; i < names.size(); i++) {
     fprintf(stdout, "name %s|", names[i].c_str());
   }
   fprintf(stdout, "\n");
-  auto ptable = pconf->operator[]("conv.0");
+  auto ptable = pconf->operator[](0);
   std::vector<float> weights = ptable->get_list<float>("weight");
   for (auto w : weights) {
     fprintf(stdout, "%f ", w);
   }
   fprintf(stdout, "\n");
+
+  int qvalue = ptable->get<int>("qweight");
+  fprintf(stdout, "qweight: %d\n", qvalue);
   pconf->write("re-quant.ini");
 }
 
