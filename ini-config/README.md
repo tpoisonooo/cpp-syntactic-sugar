@@ -2,7 +2,7 @@
 
 `.ini` file parser and serializer, developed for ncnn int8 quant config.
 
-You can also treat it as partial .toml format +_+
+You can also treat it as partial `.toml` format +_+
 
 before:
 
