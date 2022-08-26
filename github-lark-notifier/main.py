@@ -126,61 +126,6 @@ def work_time():
         return True
     else:
         return False
-    
-def process_message(text: str):
-    """处理消息
-    如果非工作时间，不空就直接塞进历史
-    如果是工作时间，处理历史，然后看该不该发这条消息
-
-    Args:
-        text (str): _description_
-
-    Returns:
-        _type_: _description_
-    """
-    webhook = "${YOUR_WEBHOOK}"
-    FILENAME = 'history.txt'
-    
-    if not work_time():
-        if text is not None:
-            print("=== Not worktime, add {} to history.txt".format(text))
-            with open(FILENAME, 'a') as f:
-                f.write(text)
-        return jsonify(dict(state="ok"))
-
-    if os.path.exists(FILENAME):
-        # send history msg if work_time
-        text = "历史消息: \n"
-        with open(FILENAME, 'r') as f:
-            history = f.readlines()
-            for item in history:
-                text += item
-        os.remove(FILENAME)
-
-    if text is not None and len(text) > 0:
-        print("=== Send text: {}".format(text))
-        bot = LarkBot(webhook)
-        bot.send_text(text)
-    
-    return jsonify(dict(state="ok"))
-
-
-def left_an_comment(number):
-    """发个默认评论 at 领导，在非工作时间。
-    不打算再基于 topic 做分析，让管理问题回到管理本身
-
-    Args:
-        number (_type_): _description_
-    """
-    if (number is None):
-        print("Oops, input number is None. \n")
-        return
-    
-    url = "https://api.github.com/repos/open-mmlab/mmdeploy/issues/{}/comments".format(number)
-    cmd = """curl   -X POST  -H "Accept: application/vnd.github+json"  -H "Authorization: token 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" {}  """.format(url) + "-d '{\"body\":\"@lvhan028 \"}'"
-    print('=== command {}'.format(cmd))
-    os.system(cmd)
-
 
 @app.route('/github/lark',methods=['post'])
 def lark_robot():
@@ -200,7 +145,6 @@ def lark_robot():
     url = None
     type_ = None
     text = None
-    
     if "issue" in jsonobj and "html_url" in jsonobj['issue']:
         type_ = "issue"
         issue = jsonobj['issue']
@@ -214,9 +158,6 @@ def lark_robot():
                 url = issue['html_url']
 
             text = "[新的 issue] 标题: {}, 链接 {} \n".format(title, url)
-            
-            if not work_time():
-                left_an_comment(issue['number'])
 
     elif "pull_request" in jsonobj and "requested_reviewer" in jsonobj and action != "review_request_removed":
         type_ = "pull_request"
@@ -230,10 +171,47 @@ def lark_robot():
         text = "请求 {} review PR, 链接 {} \n".format(reviewer, url)
 
     print("=== Got type: {} | url: {} | action {}".format(type_, url, action))
-    
-    return process_message(text)
-    # return jsonify(dict(state="ok"))
-    
 
+
+    webhook = "${WEBHOOK}"
+    FILENAME = 'history.txt'
+    if text is None:
+        if work_time() and os.path.exists(FILENAME):
+            # send history msg if work_time
+            text = "历史消息: \n"
+            with open(FILENAME, 'r') as f:
+                history = f.readlines()
+                for item in history:
+                    text += item
+            os.remove(FILENAME)
+
+            print("=== Send histoy text: {}".format(text))
+            bot = LarkBot(webhook)
+            bot.send_text(text)
+        return jsonify(dict(state="ok"))
+
+    
+    if not work_time():
+        print("=== Not worktime, add {} to history.txt".format(text))
+        with open(FILENAME, 'a') as f:
+            f.write(text)
+
+        return jsonify(dict(state="ok"))
+
+    if os.path.exists(FILENAME):
+        text += "\n 历史消息：\n"
+        with open(FILENAME, 'r') as f:
+            history = f.readlines()
+            for item in history:
+                text += item
+        os.remove(FILENAME)
+            
+    print("=== Send text: {}".format(text))
+    bot = LarkBot(webhook)
+    bot.send_text(text)
+
+
+    return jsonify(dict(action=action,url=url))
+ 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=50000)
