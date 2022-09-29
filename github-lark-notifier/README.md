@@ -81,4 +81,4 @@ $ ./ngrok http 50000
 * 感谢某网上作者提供了 `LarkBot` class 源码，然而我已找不到出处
 
 # License
-[license](LICENSE)
+[license](../LICENSE)
