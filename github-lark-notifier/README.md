@@ -43,7 +43,6 @@
 
 ## 运行
 ### 1. 绑定个人 ngrok
-
 打开 ngrok 官网 https://dashboard.ngrok.com/get-started/setup ，github 登录，注册一下。
 ```bash
 $ ngrok config add-authtoken 296eIVNTMih9ZVA7SAqVnfJPamF_xxxxxxxxxxxxxxxxxxxxxxxxx  # 每个人都不一样
@@ -51,7 +50,6 @@ $ ngrok config add-authtoken 296eIVNTMih9ZVA7SAqVnfJPamF_xxxxxxxxxxxxxxxxxxxxxxx
 不注册的话，ngrok 只能用 2 个小时
 
 ### 2. 监听 issue 和 PR
-
 开一个 tmux 
 ```bash
 $ python3 -m pip install flask
@@ -71,11 +69,13 @@ $ ./ngrok http 50000
 然后会得到 ngrok 的地址，例如 https://123-456-789-182-51.ap.ngrok.io
 
 ### 4. 设置github webhook
-
 打开 github repo，settings -> webhook，新增一个 webhook
 
 * URL 填 ngork 的地址，再拼接一个 "/github/lark"，例如 https://123-456-789-182-51.ap.ngrok.io/github/lark
 * content-type 选择 `application/json`
+
+### 5. 测试
+自己创建一个 issue，飞书群里应该有提醒；main.py 应该至少有 1 行日志
 
 # 三、致谢
 * 感谢某网上作者提供了 `LarkBot` class 源码，然而我已找不到出处
