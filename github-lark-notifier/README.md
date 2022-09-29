@@ -1,7 +1,11 @@
 # github-lark-notifier
-github - 飞书自定义消息提醒
+往飞书群发 issue 和 PR 相关提醒
 
-# Feature
+
+# iissue 相关功能
+1. 创建时提醒
+2. 
+1. 创建时提醒
 1. issue 创建和 review request 时，给飞书发提醒
 2. 仅周一至周五且 10~19 点才工作，遵守我国劳动法
 3. 非工作期间的消息，都记入 `history.txt`，随下一条工作消息一起发
