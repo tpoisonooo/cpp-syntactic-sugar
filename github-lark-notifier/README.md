@@ -62,7 +62,7 @@ $ python3 main.py
 $ python3 pr_7days.py
 ```
 
-#### 3. 转发 http 端口
+### 3. 转发 http 端口
 再开个 window
 ```bash
 $ ./ngrok http 50000
@@ -70,7 +70,7 @@ $ ./ngrok http 50000
 ```
 然后会得到 ngrok 的地址，例如 https://123-456-789-182-51.ap.ngrok.io
 
-#### 4. 设置github webhook
+### 4. 设置github webhook
 
 打开 github repo，settings -> webhook，新增一个 webhook
 
