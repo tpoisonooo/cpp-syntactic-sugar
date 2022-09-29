@@ -1,7 +1,7 @@
 # github-lark-notifier
 往飞书群发 issue 和 PR 相关提醒
 
-# 功能介绍
+# 一、功能介绍
 ## issue 相关
 1. 创建 issue 时提醒
 2. 其他同事 assign issue 给你会提醒；自己 assign 给自己不会
@@ -16,7 +16,7 @@
 2. 工作时间的任意动作（如 issue close/issue reopen），会抽取所有 `history.txt`
 
 
-# 如何使用
+# 二、如何使用
 ## 配置参数
 打开 `config.json`，有三条需要配置
 
@@ -77,7 +77,7 @@ $ ./ngrok http 50000
 * URL 填 ngork 的地址，再拼接一个 "/github/lark"，例如 https://123-456-789-182-51.ap.ngrok.io/github/lark
 * content-type 选择 `application/json`
 
-# 致谢
+# 三、致谢
 * 感谢某网上作者提供了 `LarkBot` class 源码，然而我已找不到出处
 
 # License
