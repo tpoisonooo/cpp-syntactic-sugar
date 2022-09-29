@@ -75,7 +75,9 @@ $ ./ngrok http 50000
 * content-type 选择 `application/json`
 
 ### 5. 测试
-自己创建一个 issue，飞书群里应该有提醒；main.py 应该至少有 1 行日志
+自己创建一个 issue
+* main.py 应该至少有 1 行日志
+* 工作时间，飞书群里应该有消息
 
 # 三、致谢
 * 感谢某网上作者提供了 `LarkBot` class 源码，然而我已找不到出处
