@@ -52,6 +52,16 @@ def parseXML(xmlstr):
         return None, None
     return fromuser, content
 
+def getResponse(content, title):
+    data = {"fn_index":0,"data":["{} {}".format(content, title)]}
+    resp = requests.post('https://3c04f31e3c1769ad87.gradio.live/run/predict', data=json.dumps(data))
+    print(resp, resp.content)
+    x = json.loads(resp.content)
+    x = x['data']
+    if type(x) == list:
+        return x[0]
+    return x
+
 @app.route('/callback', methods=['GET', 'POST'])
 def callback():
 
@@ -71,23 +81,39 @@ def callback():
         f.write(jsonstr)
         f.write('\n')
 
-    whitelist = ['wxid_raxq4pq3emg212']
+    # 瓜球
+    whitelist = ['wxid_raxq4pq3emg212', 'wxid_nl9mlgj0juta21']
 
     if messageType == '80014':
         target = data['toUser']
         if target == mywxid:
-            import pdb
-            pdb.set_trace()
             wid = data['wId']
             group = data['fromGroup']
             title = data['title'][4:]
             content = data['content']
             fromuser, content = parseXML(content)
             if fromuser in whitelist and content is not None:
-                send(wid, group, content, title)
+
+                resp = getResponse(title, content)
+                send(wid, group, resp, title)
             else:
                 logger.debug('fromuser {} say {} banned'.format(fromuser, content))
+    elif messageType == '80001':
+        fromuser = data['fromUser']
+        wid = data['wId']
+        content = data['content']
+        group = data['fromGroup']
+        title = ''
 
+        if fromuser in whitelist and content.startswith("@茴香豆"):
+            content = content[4:]
+            resp = getResponse(title, content)
+            send(wid, group, resp, title)
+        elif group == '18356748488@chatroom' or group == '18356748488@chatroom':
+            if "@茴香豆" in content:
+                content = content[4:]
+                resp = getResponse(title, content)
+                send(wid, group, resp, title)
     return ok()
 
 if __name__ == '__main__':

@@ -7,8 +7,8 @@ def login():
        "Content-Type": "application/json" 
     }
     data = {
-        'account': '',
-        'password': ''
+        'account': '????',
+        'password': '?????'
     }
 
     resp = requests.post('http://114.107.252.79:9899/member/login', data=json.dumps(data), headers = headers)
