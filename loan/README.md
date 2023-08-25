@@ -8,7 +8,7 @@ fund_year = 30,        # 多少年
 fund_interest = 3.1,   # 公积金利率
 fund_left = 480000,    # 公积金余额
 shanghai_ceil = 36549,   # 上海 2023 年人均收入 3 倍
-month_income = 20000, i  # 每月打算用来处理房贷的钱
+month_income = 20000,    # 每月打算用来处理房贷的钱
 ncome_fund_rate = 12     # 公积金缴纳系数， 7+5%
 ```
 在上海，啥是 月冲 和 年冲：
