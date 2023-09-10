@@ -295,7 +295,7 @@ def use_fund_left_prepay_interest_year_pay(busi_loan = 2660000, busi_year = 20, 
 
 def use_fund_left_prepay_interest_month_income(busi_loan = 2660000, busi_year = 20, busi_interest = 4.55,
          fund_loan = 600000, fund_year = 30, fund_interest = 3.1, fund_left = 480000,
-         shanghai_ceil = 36549, month_income = 50000, income_fund_rate = 12):
+         shanghai_ceil = 36549, month_income = 20000, income_fund_rate = 12):
     print('\n月冲，每月扣掉公积金后真实支出，考虑公积金余额，每月固定掏{}处理房贷。每年提前还款一次。考虑利息：'.format(month_income))
 
     fund_ceil = shanghai_ceil * income_fund_rate / 100 * 2 # 每月公积金缴存
@@ -397,7 +397,7 @@ def use_fund_left_prepay_interest_year_pay_month_left(busi_loan = 2660000, busi_
         
         pay_month_12 = []
         for x,y in zip(busi_month_12, fund_month_12):
-            pay = x+y-fund_ceil
+            pay = max(x+y-fund_ceil,0)
             if fund_left > 0 and fund_left > pay:
                 fund_left -= pay
                 pay_month_12.append(0)
@@ -428,14 +428,15 @@ def use_fund_left_prepay_interest_year_pay_month_left(busi_loan = 2660000, busi_
         interest = sum(interest_list)
         interest_sum += interest
         print('第{}年'.format(year), pay_month_12, int(busi_loan), int(fund_loan), int(interest))
-
+        if busi_loan < 1 and fund_loan < 1:
+            break
     print('累计支付利息：{}'.format(int(interest_sum)))
 
 # test_loan_caculator()
 # base()
 # use_fund_left()
 # use_fund_left_prepay()
-use_fund_left_prepay_interest()
-use_fund_left_prepay_interest_year_pay()
+# use_fund_left_prepay_interest()
+# use_fund_left_prepay_interest_year_pay()
 use_fund_left_prepay_interest_month_income()
 use_fund_left_prepay_interest_year_pay_month_left()
