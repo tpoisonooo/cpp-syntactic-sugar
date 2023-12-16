@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>2023 上海提前还贷计算器</title>
+</head>
+<body>
+    <h2>提前还贷计算器（上海 2023 版）</h2>
+    <form action="http://127.0.0.1:8080/get" method="get">
+        <fieldset>
+            <legend>商贷（等本）</legend>
+            <div>
+                <label for="total-loan">贷款额（万）:</label>
+                <input type="number" id="total-loan" name="total_loan" value="200">
+            </div>
+            <div>
+                <label for="loan-rate">LPR 利率（%）:</label>
+                <input type="number" id="loan-rate" name="loan_rate" value="4.2">
+            </div>
+            <div>
+                <label for="loan-rate">BP 加点:</label>
+                <input type="number" id="loan-bp" name="loan_bp" value="-10">
+            </div>
+            <div>
+                <label for="loan-years">年限（年）:</label>
+                <input type="number" id="loan-years" name="loan_years" value="30">
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>公积金贷（等本、月冲）</legend>
+            <div>
+                <label for="fund-loan">贷款额（万）:</label>
+                <input type="number" id="fund-loan" name="fund_loan" value="60">
+            </div>
+            <div>
+                <label for="fund-loan-rate">利率（%）:</label>
+                <input type="number" id="fund-loan-rate" name="fund_loan_rate" value="3.1">
+            </div>
+            <div>
+                <label for="fund-loan-years">年限:</label>
+                <input type="number" id="fund-loan-years" name="fund_loan_years" value="30">
+            </div>
+            <div>
+                <label for="fund-balance">公积金余额（万）:</label>
+                <input type="number" id="fund-balance" name="fund_balance" value="30">
+            </div>
+            <div>
+                <label for="monthly-deposit-total">贷款人可以有多个，家庭每月公积金缴存:</label>
+                <input type="number" id="monthly-deposit-total" name="monthly_deposit_total" value="8000">
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>提前还款设置</legend>
+            <label>除房贷外，每个月再固定出钱用于提前还款</label>
+            <div>
+                <label for="monthly-payment-amount">每月（元）:</label>
+                <input type="number" id="monthly-payment-amount" name="monthly_payment_amount" value="5000">
+            </div>
+        </fieldset>
+
+        <button type="submit">计算</button>
+    </form>
+
+    <h4>名词解释</h4>
+    <form>
+        <div><label><strong>*等本/等息：</strong>等息每个月还款额固定，但前 3 年归还的都是利息，本金基本没少；选择等本归还总额较少，但前几年资金压力较大。</label></div>
+        <div><label><strong>*月充/年充：</strong>上海特有政策。公积金要么选择年冲一次性抵扣公积金贷，然后抵扣商贷；或者用于每月偿还商贷+公积金贷。<br>当公积金较多时，年冲更划算</br></div>
+        <div><label><strong>*提前还款：</strong>每年可提前还款 2 次。充分使用这 2 次机会，配合等本+月冲，能够在减少贷款利息的同时，保持部分现金流</label></div>
+
+    </form>
+</body>
+</html>
