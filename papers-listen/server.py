@@ -1,21 +1,22 @@
 from flask import Flask, request, send_file, render_template, abort
 import redis
 import os
-
+import requests
+import re
 app = Flask(__name__)
 redis = redis.Redis(host='localhost', port=6379, db=1, charset="utf-8", decode_responses=True)
 
 def build_result(suggestion:list = [], target:object = None):
-    online = '<div><label class="blue-text">后端服务在线..</label></div>'
+    online = '<div><label class="blue-text">服务在线 23333 </label></div>'
     ping = redis.get('ping')
     if ping is None or len(ping) < 1:
-        online = '<div><label class="red-bold-text">后端服务失连!!</label></div>'
+        online = '<div><label class="red-bold-text">服务失连，别着急，作者会看。</label></div>'
 
     html_template_part0 = '''
 <!DOCTYPE html>
 <style>
     .btn {
-        width: 10vw;
+        width: 30vw;
         height: auto;
 	align-items: center;
     }
@@ -33,7 +34,7 @@ def build_result(suggestion:list = [], target:object = None):
         align-items: center;
     }
     img {
-        width: 30vw;
+        width: 50vw;
         height: auto;
     }
 </style>
@@ -50,7 +51,7 @@ def build_result(suggestion:list = [], target:object = None):
         <label> 第一步：打开 <a href="https://papers.cool/"> papers.cool</a> ，选个想听的论文 ID （如 2401.08772） </label>
     </div>
     <div>
-    <label> 第二步：填写 arxiv ID，等待处理完成 </label>
+    <label> 第二步：填写 arxiv ID（如 2401.08772），静待处理完成 </label>
     <form action="/new" method="new">
 
             <div>
@@ -64,12 +65,15 @@ def build_result(suggestion:list = [], target:object = None):
     </form>
     </div>
     <div>
-        <label> 第三步：点击 “mp3 下载”到手机，开始听论文</label>
+        <label> 第三步：点击 “mp3” 到手机，开始听论文</label>
     </div>
 '''
 
     html_template_part3 = '''
-<h3>打赏作者，留言解锁更多功能</h3>
+<h3>致谢</h3>
+<div>* LLM 使用 kimi-chat openai API</div>
+<div>* TTS 启用 PaddleSpeech fastspeech2_male fix 模型</div>
+<h3>留言解锁更多功能</h3>
 <div class="container">
     <img src="https://deploee.oss-cn-shanghai.aliyuncs.com/zanshang.jpg" alt="赞赏码">
 </div>
@@ -120,7 +124,7 @@ def build_result(suggestion:list = [], target:object = None):
     papers_str = ''
     if len(suggestion) > 0:
         papers_str += '''
-<h2> 推荐的论文列表 </h2>
+<h2> 已转换完成的论文 </h2>
 <div>
 <table border="1">
 <thead>
@@ -158,6 +162,15 @@ def build_result(suggestion:list = [], target:object = None):
     
     return html_template_part0 + online + html_template_part1 + target_str + html_template_part2 + papers_str + html_template_part3
 
+
+def check_format(string):
+    pattern = r'^2401\.[0-9]{5}$'
+    result = re.match(pattern, string) 
+    if result:
+        return True
+    else:
+        return False
+
 # 提交新任务
 @app.route('/new', methods=['GET'])
 def load():
@@ -167,6 +180,15 @@ def load():
     if len(arxiv_id) < 5:
         return '非法的 arxiv id : {}'.format(arxiv_id)
     
+    if not check_format(arxiv_id):
+        return 'arxiv id 检查不通过 {}'.format(arxiv_id)
+    # url = f'https://arxiv.org/abs/{arxiv_id}'
+    # try:
+    #     resp = requests.get(url)
+    # except Exception as e:
+    #     print(e)
+    #     return '不存在的 arxiv id {}'.format(url)
+
     # 看前面还有多少个未处理完的
     keys =  redis.keys('paper:*')
     cnt = 0
@@ -241,7 +263,7 @@ def upload_file():
 
 @app.route("/ping", methods=["POST", "GET"])
 def ping():
-    redis.set('ping', 'pong', ex=120)
+    redis.set('ping', 'pong', ex=1800)
     return 'pong'
 
 @app.route("/download/<path:path>") 
@@ -265,4 +287,3 @@ def index():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=23333)
-
