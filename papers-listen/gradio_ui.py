@@ -2,12 +2,19 @@ import gradio as gr
 import redis
 import json
 from paper import Paper, RedisStorage
+import xml.etree.ElementTree as ET
+
 # 连接 Redis
 redis_client = redis.Redis(host='localhost', port=6380, password='hxd123', decode_responses=True)
 
 # 转换论文状态的函数
-def notify_convert_paper(arxiv_id):
+def notify_convert_paper(xml_content):
+    root = ET.fromstring(xml_content)
+    # 找到第一个<td>标签并获取其内容
+    arxiv_id = root.find('.//td').text
+    arxiv_id = arxiv_id.strip()
     notify_rs = RedisStorage()
+    notify_rs.add_task(arxiv_id)
     notify_rs.update_paper_status(arxiv_id, 'pending')
     return '处理中'
 
@@ -18,7 +25,7 @@ def create_ui():
 <table border="1" style="width: 100%; table-layout: fixed;">
 <thead>
 <tr>
-<td style="width: 10%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> {} </td> 
+<td id="arxiv_id" style="width: 10%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> {} </td> 
 <td style="width: 70%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> {} </td>  
 <td style="width: 20%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> {} </td>
 </tr>
@@ -33,23 +40,21 @@ def create_ui():
         # header
         gr.Markdown("""
 # arxiv 听书
-从 [papers.cool](https://papers.cool/) 拉取每日 arxiv 更新和文本，转换成 mp3 播放。
+从 [arxiv.org cs.AI/cs.CL](arxiv.org) 拉取每日 arxiv 更新，从 [papers.cool](https://papers.cool/) 获取文本，转换成 mp3 播放。
 
 解放酸痛的眼睛，适合**睡前**、**跑步**、**带娃**等生活场景。把读论文当作一种消遣。
 
 ## 用法
 选择想听的论文，点击 “提交” 即可（预计 10 分钟）。**谁提交，谁付费**，首页会放其他人提交的、concat 后的 mp3 大合集。
 
+* LLM 用 [kimi](https://kimi.moonshot.cn/), 
+    * 调用前会 check 一下苏神那边有木有现成结果, 没有就调自己的 LLM API
+* TTS 用迅飞, 3 元/万字
+
 ## 列表""")
 
         # 论文
         for paper in papers:
-        # self.arxiv_id = arxiv_id
-        # self.title = title
-        # self.brief = brief
-        # self.status = status
-        # self.mp3_url = mp3_url
-        # self.note = note
 
             with gr.Row():
                 with gr.Column(scale=5):
@@ -58,12 +63,16 @@ def create_ui():
 
                 with gr.Column(scale=1):
                     status = paper.status
+                    print(status)
                     if status == 'init':
                         btn = gr.Button("转换")
                         btn.click(fn=notify_convert_paper, inputs=html, outputs=btn)
-                    else:
-                        # gr.Markdown('[mp3](./mp3/2402.08268.mp3)')
+                    elif status == 'success':
                         gr.Markdown(paper.mp3_url)
+                    elif status == 'error':
+                        gr.HTML('<table><tr><td style="color: red;">{}</td></tr></table>'.format(status))
+                    else:
+                        gr.HTML('<table><tr><td style="color: green;">{}</td></tr></table>'.format(status))
     
         # tail
         tail_html="""
@@ -84,3 +93,4 @@ def create_ui():
 if __name__ == "__main__":
     ui = create_ui()
     ui.launch()
+    

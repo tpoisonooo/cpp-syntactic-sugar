@@ -1,6 +1,16 @@
 import redis
 import json
 import pdb
+from datetime import datetime
+import os
+
+def ymd():
+    now = datetime.now()
+    # 格式化时间为年月日字符串
+    date_string = now.strftime("%Y-%m-%d")
+    if not os.path.exists(date_string):
+        os.makedirs(date_string)
+    return date_string
 
 class Paper:
     def __init__(self, arxiv_id, title, brief, status, mp3_url, note):
@@ -10,6 +20,7 @@ class Paper:
         self.status = status
         self.mp3_url = mp3_url
         self.note = note
+        self.dir = ymd()
 
     def to_dict(self):
         return {
@@ -56,6 +67,13 @@ class RedisStorage:
             p = self.get_paper(arxiv_id=key)
             papers.append(p)
         return papers
+
+    def add_task(self, arxiv_id):
+        self.redis.lpush('work', arxiv_id)
+
+    def fetch_task(self):
+        data = self.redis.rpop(queue_name)
+        return data
 
     def update_paper_status(self, arxiv_id, new_status):
         paper = self.get_paper(arxiv_id)
