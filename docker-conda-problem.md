@@ -43,6 +43,12 @@ $ sudo docker run  -it seedllm /bin/bash -c "source ~/.bashrc && export PATH=/ro
 CondaError: Run 'conda init' before 'conda activate'
 ```
 
+```bash
+$ sudo docker run  -it seedllm /bin/bash -c "source ~/.bashrc && export PATH=/root/miniconda3/bin:$PATH && conda init bash &&  conda activate py310"
+..
+CondaError: Run 'conda init' before 'conda activate
+```
+
 ### 目前的苟法
 
 不用 `conda activate` 了，直接运行时指定 env，即 `conda run -n py310 python3 --version` 
