@@ -6,15 +6,16 @@
 
 ![image](https://github.com/user-attachments/assets/ae93ab7b-74ce-48e3-8bc2-14cdab84b92b)
 
-正常是手动跑命令，先 `docker run -it` 再 `conda activate py310` 最后  `python3 -m run.py`
+正常是: 手动跑命令，先 `docker run -it` 再 `conda activate py310` 最后  `python3 -m run.py`
 
 现在要用 k8s 运行 docker，只能给一句命令
 
-直接  `conda env list` 会报错 `conda not found`
+直接 `conda env list` 会报错 `conda not found`
 
 ```bash
-khj@rg-X299X-AORUS-MASTER:~$ sudo docker run  -it seedllm /bin/bash -c "conda env list "
+$ sudo docker run  -it seedllm /bin/bash -c "conda env list "
 ..
+/bin/bash: line 1: conda: command not found
 ```
 
 ### 一、不同 login 方法， env 不同
