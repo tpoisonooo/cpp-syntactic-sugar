@@ -15,5 +15,6 @@
 ├── loan		     // 上海组合贷计算，考虑公积金余额、每月缴存；考虑年冲、月冲；每年提前还款+等本。
 ├── UB01-no-return
 ├── UB02-bad-inline
+├── security-llm-server	     // llm 备案要求 
 └── github-lark-notifier // github ---> 飞书群 issue/PR 提醒工具
 ```
