@@ -2,8 +2,8 @@
 
 ```
 .
-├── CRTP                          // Eigen-like 符号表达
 ├── antiseed-bean        // 机器人“茴香豆”
+├── CRTP                          // Eigen-like 符号表达
 ├── dynamic-arg-template// 模板
 ├── float-precision      // 最容易错的浮点问题
 ├── ini-config	               // ini 格式文件读写工具，也可以看作 toml 格式的裁剪
@@ -15,6 +15,6 @@
 ├── loan		     // 上海组合贷计算，考虑公积金余额、每月缴存；考虑年冲、月冲；每年提前还款+等本。
 ├── UB01-no-return
 ├── UB02-bad-inline
-├── security-llm-server	     // llm 备案要求 
+├── security-llm-server	     // LLM 备案要求
 └── github-lark-notifier // github ---> 飞书群 issue/PR 提醒工具
 ```
